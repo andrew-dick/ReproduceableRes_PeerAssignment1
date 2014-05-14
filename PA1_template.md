@@ -3,20 +3,23 @@
 ## Download data script
 
 ```r
-download.file(url = "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip", 
-    destfile = "../data/activitydata.zip", method = "curl")
-unzip(zipfile = "../data/activitydata.zip", exdir = "../data/", overwrite = TRUE)
+if (!file.exists("../data/activitydata.zip")) {
+    download.file(url = "https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip", 
+        destfile = "../data/activitydata.zip", method = "curl")
+    unzip(zipfile = "../data/activitydata.zip", exdir = "../data/", overwrite = TRUE)
+}
 ```
 
 
 ## Impute missing values
 
-* TODO - fill in the missing values (5 minute equivalence)
-
 
 ```r
 rawdata <- read.csv(file = "../data/activity.csv")
-plotdata <- na.omit(rawdata)
+plotdata <- rawdata
+meansteps <- aggregate(steps ~ interval, data = rawdata, FUN = median)
+plotdata[is.na(plotdata$steps), ]$steps <- meansteps$steps[match(plotdata[is.na(plotdata$steps), 
+    ]$interval, meansteps$interval)]
 ```
 
 
@@ -37,7 +40,7 @@ plotdata$weekpart <- as.factor(plotdata$weekpart)
 
 TODO - Histogram
 
-### Mean and median
+### Mean and median - use xtable and asis
 
 TODO - Mean data
 
