@@ -1,5 +1,10 @@
 # Peer Assignment
 
+## Preliminary stuff
+```{r}
+library(ggplot2)
+```
+
 ## Download data script
 ```{r}
 if(!file.exists("../data/activitydata.zip")){
@@ -19,7 +24,22 @@ meansteps <- aggregate(steps ~ interval, data=rawdata, FUN=median)
 plotdata[is.na(plotdata$steps),]$steps <- meansteps$steps[match(plotdata[is.na(plotdata$steps),]$interval, meansteps$interval)]
 ```
 
-## Set up data for plotting
+## Show totals
+
+### Histogram
+
+```{r}
+qplot(aggregate(.~ date, plotdata, sum)$steps, binwidth=1000, xlab="total steps per day")
+```
+### Mean and median
+
+Mean and median are calculated with inline formulas.
+
+__Mean:__ `r mean(aggregate(.~date, plotdata, sum)$steps)` steps
+
+__Median:__ `r median(aggregate(.~date, plotdata, sum)$steps)` steps
+
+## Set up data for activity plotting
 ```{r}
 plotdata$date <- as.Date(plotdata$date)
 plotdata$day <- weekdays(plotdata$date)
@@ -28,18 +48,7 @@ plotdata[ which(plotdata$day == "Saturday" | plotdata$day == "Sunday"), ]$weekpa
 plotdata$weekpart <- as.factor(plotdata$weekpart)
 ```
 
-## Show totals
-
-### Histogram
-
-TODO - Histogram
-
-### Mean and median - use xtable and asis
-
-TODO - Mean data
-
 ## Plot daily activity pattern
 ```{r fig.width=7, fig.height=6}
-library(ggplot2)
 qplot(interval, steps, data = plotdata, facets = weekpart ~. ,stat = "summary", fun.y = "mean", geom = "line")
 ```

@@ -1,5 +1,12 @@
 # Peer Assignment
 
+## Preliminary stuff
+
+```r
+library(ggplot2)
+```
+
+
 ## Download data script
 
 ```r
@@ -23,7 +30,26 @@ plotdata[is.na(plotdata$steps), ]$steps <- meansteps$steps[match(plotdata[is.na(
 ```
 
 
-## Set up data for plotting
+## Show totals
+
+### Histogram
+
+
+```r
+qplot(aggregate(. ~ date, plotdata, sum)$steps, binwidth = 1000, xlab = "total steps per day")
+```
+
+![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+
+### Mean and median
+
+Mean and median are calculated with inline formulas.
+
+__Mean:__ 9503.8689 steps
+
+__Median:__ 10395 steps
+
+## Set up data for activity plotting
 
 ```r
 plotdata$date <- as.Date(plotdata$date)
@@ -34,23 +60,12 @@ plotdata$weekpart <- as.factor(plotdata$weekpart)
 ```
 
 
-## Show totals
-
-### Histogram
-
-TODO - Histogram
-
-### Mean and median - use xtable and asis
-
-TODO - Mean data
-
 ## Plot daily activity pattern
 
 ```r
-library(ggplot2)
 qplot(interval, steps, data = plotdata, facets = weekpart ~ ., stat = "summary", 
     fun.y = "mean", geom = "line")
 ```
 
-![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
 
